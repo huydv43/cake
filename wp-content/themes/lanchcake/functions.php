@@ -3,9 +3,6 @@
 $my_theme = wp_get_theme();
 define('THEME_NAME', sanitize_title($my_theme->get('Name')));
 
-$arrayDevEnv = ['local', 'test', 'staging'];
-define('THEME_VERSION', in_array(WP_ENV, $arrayDevEnv) ? time() : $my_theme->get('Version'));
-
 define('DEV_TEXTDOMAIN', $my_theme->get('TextDomain'));
 
 // Homepage uri
