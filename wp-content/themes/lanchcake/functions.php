@@ -1,59 +1,34 @@
 <?php
-	require_once get_template_directory() . '/class-wp-bootstrap-navwalker.php';
-  	foreach(glob(get_template_directory() . "/app/Customs/PostType/*.php") as $file)
-	{
-    	require $file;
-	}
-	foreach(glob(get_template_directory() . "/app/Customs/Toxonomy/*.php") as $file)
-	{
-    	require $file;
-	}
-	foreach(glob(get_template_directory() . "/app/Views/home/*.php") as $file)
-	{
-    	require $file;
-	}
 
-  	define( 'THEME_URL', get_stylesheet_directory() );
-  	define( 'CORE', THEME_URL . '/core' );
-  	require_once( CORE . '/init.php' );
+$my_theme = wp_get_theme();
+define('THEME_NAME', sanitize_title($my_theme->get('Name')));
 
-	if ( ! function_exists( 'cake_theme_setup' ) ) {
-		function cake_theme_setup() {
+$arrayDevEnv = ['local', 'test', 'staging'];
+define('THEME_VERSION', in_array(WP_ENV, $arrayDevEnv) ? time() : $my_theme->get('Version'));
 
-			$language_folder = THEME_URL . '/languages';
-			load_theme_textdomain( 'cake', $language_folder );
+define('DEV_TEXTDOMAIN', $my_theme->get('TextDomain'));
 
-			add_theme_support( 'automatic-feed-links' );
+// Homepage uri
+define('HOME_URI', esc_url(home_url('/')));
 
-			add_theme_support( 'post-thumbnails' );
+// Theme path
+define('THEME_DIR', get_template_directory());
+define('THEME_URI', get_template_directory_uri());
 
-			add_theme_support( 'title-tag' );
+// Assets uri
+define('ASSETS_URI', THEME_URI . '/assets');
 
-			add_theme_support( 'post-formats',
-				array(
-					'video',
-					'image',
-					'audio',
-					'gallery'
-				)
-			);
+// App dir
+define('APP_DIR', THEME_DIR . '/app');
 
-			$default_background = array(
-				'default-color' => '#e8e8e8',
-			);
-			add_theme_support( 'custom-background', $default_background );
+// Third party dir
+define('THIRD_DIR', THEME_DIR . '/third_party');
 
-			register_nav_menu ( 'primary-menu', __('Primary Menu', 'cake') );
+// Gutenberg path
+define('GUTENBERG_DIR', THEME_DIR . '/gutenberg');
+define('GUTENBERG_URI', THEME_URI . '/gutenberg');
 
-			$sidebar = array(
-				'name' => __('Main Sidebar', 'cake'),
-				'id' => 'main-sidebar',
-				'description' => 'Main sidebar for cake theme',
-				'class' => 'main-sidebar',
-				'before_title' => '<h3 class="widgettitle">',
-				'after_sidebar' => '</h3>'
-			);
-			register_sidebar( $sidebar );
-		}
-		add_action ( 'init', 'cake_theme_setup' );
-	}
+/**
+ * Initialize all the things.
+ */
+require APP_DIR . '/init.php';
